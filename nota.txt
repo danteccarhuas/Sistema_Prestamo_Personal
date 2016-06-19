@@ -1,0 +1,6 @@
+IIS: Internet INformation Service.
+
+Sirve para ejecutar al app web en .net .
+Es un servidor de aplicaciones
+
+Comando para abrir el IIS es: window+R, escribir inetmgr
