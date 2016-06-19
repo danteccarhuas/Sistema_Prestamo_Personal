@@ -32,7 +32,8 @@
     });*/
 
     $('#btn_ingresar').click(function (e) {
-        $('#frmSeguridad').attr('action', '/Seguridad/MenuPrincipal');
+        //$('#frmSeguridad').attr('action', '/Seguridad/MenuPrincipal');
+        $('#frmSeguridad').attr('action', '/Seguridad/Intranet');
     });
 
     /* function IniciarSession() {

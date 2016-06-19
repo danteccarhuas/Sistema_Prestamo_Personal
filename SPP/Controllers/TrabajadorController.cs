@@ -4,14 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-using Lib_Entidad;
 using Lib_Negocio;
+using Lib_Entidad;
 
 namespace SPP.Controllers
 {
-    public class TrabajadoController : Controller
+    public class TrabajadorController : Controller
     {
-        // GET: Trabajado
+        // GET: Trabajador
         public ActionResult mantener_trabajador()
         {
 

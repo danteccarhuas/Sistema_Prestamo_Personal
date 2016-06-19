@@ -14,7 +14,7 @@ namespace SPP.Controllers
             return View();
         }
 
-        public ActionResult MenuPrincipal()
+        public ActionResult Intranet()
         {
             return View();
         }
