@@ -1,7 +1,7 @@
 ﻿$(document).ready(function (e) {
     $('#datePicker_f_nacimiento').datepicker({
         format: 'yyyy-mm-dd',
-        language: "es"
+        language: "e"
     });
 
 
