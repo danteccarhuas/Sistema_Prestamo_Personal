@@ -24,23 +24,25 @@ namespace SPP.Controllers
             return Json(new { result = dao.UpdateTrabajador(bean, 1) });
         }
 
-        
-        public ActionResult ListaTrabajador(tb_trabajador bean)
+
+        public JsonResult ListaTrabajador(tb_trabajador bean)
         {
             BB_tb_trabajador dao = new BB_tb_trabajador();
             bean.idTrabajador = bean.idTrabajador == null ? "" : bean.idTrabajador;
             bean.nombres = bean.nombres == null ? "" : bean.nombres;
             bean.dni = bean.dni == null ? "" : bean.dni;
-            return Json(new { result = dao.ListarTrabajador(bean) });
+            Request.AcceptTypes.Contains("application/json");
+            return Json(new { success = true, resultado = dao.ListarTrabajador(bean) }, JsonRequestBehavior.AllowGet);
         }
 
-       /* public JsonResult TotalRegistrosTrabajador(tb_trabajador bean)
+        public JsonResult TotalRegistrosTrabajador(tb_trabajador bean)
         {
             BB_tb_trabajador dao = new BB_tb_trabajador();
             bean.idTrabajador = bean.idTrabajador == null ? "" : bean.idTrabajador;
             bean.nombres = bean.nombres == null ? "" : bean.nombres;
             bean.dni = bean.dni == null ? "" : bean.dni;
-            return Json(new { result = dao.TotalRegistroTrabajador(bean),JsonRequestBehavior.AllowGet});
-        }*/
+            Request.AcceptTypes.Contains("application/json");
+            return Json(new { success = true, resultado = dao.TotalRegistroTrabajador(bean) }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

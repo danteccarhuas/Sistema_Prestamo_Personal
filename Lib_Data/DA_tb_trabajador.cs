@@ -144,13 +144,14 @@ namespace Lib_Data
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "usp_Cons_DatosTrabajador";
-                SqlDataReader dr = cmd.ExecuteReader();
 
                 cmd.Parameters.AddWithValue("@idTrabajador", bean.idTrabajador);
                 cmd.Parameters.AddWithValue("@trabajador", bean.nombres);
                 cmd.Parameters.AddWithValue("@dni", bean.dni);
                 cmd.Parameters.AddWithValue("@limit", bean.paginador.limit);
                 cmd.Parameters.AddWithValue("@desde", bean.paginador.offset);
+
+                SqlDataReader dr = cmd.ExecuteReader();
 
                 try
                 {

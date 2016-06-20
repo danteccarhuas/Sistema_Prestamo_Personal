@@ -140,16 +140,17 @@ function initGrilla() {
     var dni = $('#txt_dni_buscar').val() == "" ? "" : $('#txt_dni_buscar').val();
     //url: '/Trabajador/TotalRegistrosTrabajador&&' + 'bean.idTrabajador=' + cod + '&&bean.nombres=' + tra + '&&bean.dni=' + dni,
     $.ajax({
-        url: '/Trabajador/TotalRegistrosTrabajador?' + 'bean.idTrabajador=' + cod + '&&bean.nombres=' + tra + '&&bean.dni=' + dni,
+        url: '/Trabajador/TotalRegistrosTrabajador',
         type: 'get',
-        data: {},
+        data: {'bean.idTrabajador': cod, 'bean.nombres': tra, 'bean.dni': dni},
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
-        success: function (result) {
-            var TotalRegistro = result;
+        success: function (resultado) {
+            var TotalRegistro = resultado.resultado;
             creaPaginador(TotalRegistro);
         },
         error: function (xhr, ajaxOptions, thrownError) {
+
             alert("Error status code: " + xhr.status);
             alert("Error details: " + thrownError);
         }
@@ -221,14 +222,14 @@ function cargaPagina(pagina) {
 
     $.ajax({
         url: '/Trabajador/ListaTrabajador',
-        type: 'post',
+        type: 'get',
         data: { 'bean.idTrabajador': cod, 'bean.nombres': tra, 'bean.dni': dni, 'bean.paginador.limit': itemsPorPagina, 'bean.paginador.offset': desde },
         dataType: 'json',
-        success: function (result) {
-            var lista = result;
+        success: function (resultado) {
+            var data = resultado.resultado;
             $("#rellenar").html("");
             var trHTML = '';
-            if (lista.length > 0) {
+            if (data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
                     trHTML += '<tr><td>'
                         + data[i]['idTrabajador']
@@ -247,6 +248,11 @@ function cargaPagina(pagina) {
                 }
                 $('#rellenar').append(trHTML);
             }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+
+            alert("Error status code: " + xhr.status);
+            alert("Error details: " + thrownError);
         }
     });
 
