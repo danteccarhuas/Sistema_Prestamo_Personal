@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="tb_cuotas.cs" />
+    <Compile Include="tb_paginador.cs" />
     <Compile Include="tb_usuario.cs" />
     <Compile Include="tb_trabajador.cs" />
     <Compile Include="tb_cliente.cs" />

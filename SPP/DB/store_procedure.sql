@@ -28,7 +28,7 @@ select @v_idUsuario=MAX(idUsuario) from tb_usuario;
 
 select @v_idTrabajador=RTRIM('TRA')+RTRIM(RIGHT('000' +CONVERT(varchar,ISNULL(MAX(CONVERT(int,right([idTrabajador],4))),0)+1),4)) from dbo.tb_trabajador; 
 
-INSERT tb_trabajador(idTrabajador,nombres,ape_paterno,ape_materno,dni,direccion,correo,telefono,fecha_nacimiento,idUsuario)
+INSERT tb_trabajador(idTrabajador,nombres,ape_paterno,ape_materno,dni,direccion,correo,telefono,fecha_nacimiento,estado,idUsuario)
 VALUES(@v_idTrabajador,@nombres,@ape_paterno,@ape_materno,@dni,@direccion,@correo,@telefono,@fecha_nacimiento,1,@v_idUsuario);
 
 SET @idTrabajador = @v_idTrabajador
@@ -57,11 +57,11 @@ Begin
 declare @v_pass varchar(15);
 set	@v_pass='';
 
-set @v_pass=SUBSTRING(@nombres,1,1)+@ape_paterno
+set @v_pass=SUBSTRING(@nombres,1,1)+@ape_paterno;
 
 update tb_usuario 
-set dni=@dni,
-	v_pass=@v_pass
+set login=@dni,
+	password=@v_pass
 where idUsuario=@idUsuario;
 
 update tb_trabajador
@@ -116,6 +116,36 @@ where idTrabajador=@idTrabajador;
 End
 Go
 
+if object_id('usp_Cons_DatosTrabajador')is not null
+begin
+	drop proc usp_Cons_DatosTrabajador
+end
+go
+Create Proc usp_Cons_DatosTrabajador(
+@idTrabajador char(8),
+@trabajador varchar(45),
+@dni varchar(8),
+@limit int,
+@desde int
+)
+As
+Begin
+
+	select t.idTrabajador,(t.nombres+' '+t.ape_paterno+' '+t.ape_materno) 'trabajador',
+	t.dni,u.login,u.password,t.telefono
+	from tb_trabajador t inner join tb_usuario u
+	on t.idUsuario=u.idUsuario
+	where 
+		(t.idTrabajador =@idTrabajador OR '' = @idTrabajador) and 
+		((nombres+' '+ape_paterno+' '+ape_paterno) like CONCAT('%',@trabajador,'%')
+		or ''=@trabajador)
+		and (t.dni=@dni or ''=@dni)
+		and estado=1
+		order by t.idTrabajador asc
+		OFFSET @desde ROWS FETCH NEXT @limit ROWS ONLY;
+End
+Go
+
 
 if object_id('usp_RegistrarCliente')is not null
 begin
@@ -145,6 +175,7 @@ Values(@v_idCliente,@nombres,@ape_paterno,@ape_materno,
 set @idCliente=@v_idCliente
 End
 go
+
 
 if object_id('usp_ActualizarCliente')is not null
 begin
@@ -207,20 +238,31 @@ End
 Go
 
 
-if object_id('usp_ListarCliente')is not null
+if object_id('usp_TotaRegist_Trabajador')is not null
 begin
-	drop proc usp_ListarCliente
+	drop proc usp_TotaRegist_Trabajador
 end
 go
-Create Proc usp_ListarCliente
+Create Proc usp_TotaRegist_Trabajador(
+@idTrabajador char(8),
+@trabajador varchar(45),
+@dni varchar(8),
+@TOTALREGISTRO int out
+)
 As
 Begin
-select idCliente,(nombres+' '+ape_paterno+' '+ape_materno) 'cliente',
-dni,correo,telefono
-from tb_cliente
+	declare @v_TOTALREGISTRO INT;
+	set @v_TOTALREGISTRO=0;
+
+	select @v_TOTALREGISTRO= count(t.idTrabajador)
+	from tb_trabajador t
+	where 
+		(t.idTrabajador =@idTrabajador OR '' = @idTrabajador) and 
+		((nombres+' '+ape_paterno+' '+ape_paterno) like CONCAT('%',@trabajador,'%')
+		or ''=@trabajador)
+		and (t.dni=@dni or ''=@dni)
+		and estado=1;
+
+	set @TOTALREGISTRO=@v_TOTALREGISTRO;
 End
 Go
-
-
-
-

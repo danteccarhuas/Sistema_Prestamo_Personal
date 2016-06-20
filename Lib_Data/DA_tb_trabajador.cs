@@ -129,9 +129,9 @@ namespace Lib_Data
             return bean;
         }
 
-        public List<tb_trabajador> ListarTrabajador()
+        public List<tb_trabajador> ListarTrabajador(tb_trabajador bean)
         {
-            tb_trabajador bean = null;
+            tb_trabajador obj = null;
             List<tb_trabajador> data = new List<tb_trabajador>();
             SqlConnection con = new SqlConnection();
             Conexion cn = new Conexion();
@@ -143,8 +143,15 @@ namespace Lib_Data
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "usp_ListarTrabajador";
+                cmd.CommandText = "usp_Cons_DatosTrabajador";
                 SqlDataReader dr = cmd.ExecuteReader();
+
+                cmd.Parameters.AddWithValue("@idTrabajador", bean.idTrabajador);
+                cmd.Parameters.AddWithValue("@trabajador", bean.nombres);
+                cmd.Parameters.AddWithValue("@dni", bean.dni);
+                cmd.Parameters.AddWithValue("@limit", bean.paginador.limit);
+                cmd.Parameters.AddWithValue("@desde", bean.paginador.offset);
+
                 try
                 {
 
@@ -154,15 +161,15 @@ namespace Lib_Data
                         while (dr.Read())
                         {
                             usu = new tb_usuario();
-                            bean = new tb_trabajador();
-                            bean.idTrabajador = dr.GetString(0);
-                            bean.nombres = dr.GetString(1);
-                            bean.dni = dr.GetString(2);
+                            obj = new tb_trabajador();
+                            obj.idTrabajador = dr.GetString(0);
+                            obj.nombres = dr.GetString(1);
+                            obj.dni = dr.GetString(2);
                             usu.login = dr.GetString(3);
                             usu.password = dr.GetString(4);
-                            bean.tb_usuario = usu;
-                            bean.telefono = dr.GetString(5);
-                            data.Add(bean);
+                            obj.tb_usuario = usu;
+                            obj.telefono = dr.GetString(5);
+                            data.Add(obj);
                         }
                     }
 
@@ -177,6 +184,42 @@ namespace Lib_Data
                 }
             }
             return data;
+        }
+
+        public int TotalRegistroTrabajador(tb_trabajador bean)
+        {
+            int TotalRegistro = 0;
+            SqlConnection con = new SqlConnection();
+            Conexion cn = new Conexion();
+            con = cn.getConexion();
+            con.Open();
+
+            if (con != null)
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "usp_TotaRegist_Trabajador";
+
+                cmd.Parameters.AddWithValue("@idTrabajador", bean.idTrabajador);
+                cmd.Parameters.AddWithValue("@trabajador", bean.nombres);
+                cmd.Parameters.AddWithValue("@dni", bean.dni);
+                cmd.Parameters.Add(new SqlParameter("@TOTALREGISTRO", SqlDbType.Int)).Direction = ParameterDirection.Output;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    TotalRegistro = int.Parse(cmd.Parameters[3].Value.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+            return TotalRegistro;
         }
     }
 }

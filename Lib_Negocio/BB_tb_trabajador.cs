@@ -19,10 +19,16 @@ namespace Lib_Negocio
             DA_tb_trabajador dao = new DA_tb_trabajador();
             return dao.BuscarTrabajador(idUsuario);
         }
-        public List<tb_trabajador> ListarTrabajador()
+        public List<tb_trabajador> ListarTrabajador(tb_trabajador bean)
         {
             DA_tb_trabajador dao = new DA_tb_trabajador();
-            return dao.ListarTrabajador();
+            return dao.ListarTrabajador(bean);
+        }
+
+        public int TotalRegistroTrabajador(tb_trabajador bean)
+        {
+            DA_tb_trabajador dao = new DA_tb_trabajador();
+            return dao.TotalRegistroTrabajador(bean);
         }
     }
 }

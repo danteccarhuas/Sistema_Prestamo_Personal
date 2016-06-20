@@ -194,6 +194,7 @@
     <Content Include="js\function-cliente.js" />
     <Content Include="js\function-seguridad.js" />
     <Content Include="js\function-trabajador.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="font-awesome\fonts\fontawesome-webfont.eot" />
