@@ -178,7 +178,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\datepicker.css" />
-    <Content Include="css\fonts\fontawesome-webfont.svg" />
     <Content Include="css\login.css" />
     <Content Include="css\plugins\morris.css" />
     <Content Include="css\sb-admin.css" />
@@ -187,8 +186,8 @@
     <Content Include="favicon.ico" />
     <Content Include="font-awesome\css\font-awesome.css" />
     <Content Include="font-awesome\css\font-awesome.min.css" />
-    <Content Include="css\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="font-awesome\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\loginUser.png" />
@@ -203,11 +202,10 @@
     <Content Include="font-awesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="font-awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="font-awesome\fonts\FontAwesome.otf" />
-    <Content Include="css\fonts\fontawesome-webfont.eot" />
-    <Content Include="css\fonts\fontawesome-webfont.ttf" />
-    <Content Include="css\fonts\fontawesome-webfont.woff" />
-    <Content Include="css\fonts\FontAwesome.otf" />
-    <Content Include="css\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="font-awesome\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="font-awesome\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="font-awesome\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="font-awesome\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrapValidator.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -267,9 +265,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="css\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="css\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="css\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
