@@ -13,8 +13,7 @@
 
     //Activar Panel ConsultarTrabajador y Desactivar PanelDatosTrajador
     $('#btn_salir').on('click', function () {
-        //$("#frm_socio").data('bootstrapValidator').resetForm(true);/*Limpiamos todos los controles del formulario frm_trabajador */
-        /*Limpiar la foto*/
+        $("#frm_trabajador").data('bootstrapValidator').resetForm(true);/*Limpiamos todos los controles del formulario frm_trabajador */
         $('#tab1').prop("disabled", false).removeClass('disabled');
         $('#tab2').prop("disabled", true).addClass('disabled');
         $('.nav-tabs > .active').prop("disabled", true).addClass('disabled').prev('li').find('a').trigger('click');
@@ -33,11 +32,11 @@
         language: "es"
     });
 
-    $('#btn_enviar').click(function (e) {
+    $('#frm_trabajador').on('success.form.bv', function (e) {
         $('#hiddenInsert_UpdateTrabajador').val() == 0 ? RegistrarTrabajador() : ActualizarTrabajador();
         /*deshabilitar button btn_enviar*/
         $("#btn_enviar").prop("disabled", true);
-        return false;
+        e.preventDefault();
     });
 
     $('#btn_buscar').click(function (e) {
@@ -47,55 +46,145 @@
         $('#ModalLoading').modal('hide');
     });
 
-
-   /* $(function (e) {
-
-        $.ajax({
-            url: '/Trabajador/ListaTrabajador',
-            type: 'post',
-            data: {},
-            contentType: "application/json; charset=utf-8",
-            dataType: 'json',
-            success: function (resultado) {
-                console.log(resultado.result);
-
-                ListarTrabajador(resultado.result);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert("Error status code: " + xhr.status);
-                alert("Error details: " + thrownError);
-            }
-
+    /*Metodo para DarBaja Trabajador*/
+    $(document).on("click", ".DarBajaTrabajador", function (e) {
+        //e.preventDefault();
+        $('#hiddencodtrabajador').val($(this).data('id'));
+        $("#modalRemove").modal({
+            keyboard: false
         });
-    });*/
+    });
+
+    $(".removeBtn").click(function (e) {
+        $("#modalRemove").modal("hide");
+        var codtrabajador = $('#hiddencodtrabajador').val();
+        $.ajax({
+            url: '/Trabajador/DarBajaTrabajador',
+            type: 'get',
+            data: { 'bean.idTrabajador': codtrabajador },
+            dataType: 'json',
+            success: function (result) {
+                if (result.resultado != -1) {
+                    $("#paginador").html("");/*Limpiar los numero de paginacion*/
+                    initGrilla();
+                }
+            }
+        });
+
+    });
+
+    $('#datePicker_f_nacimiento').datepicker({
+        format: 'yyyy-mm-dd',
+        language: "es"
+    }).on('changeDate', function (e) {
+        $('#frm_trabajador').bootstrapValidator(
+            'revalidateField', 'bean.fecha_nacimiento');
+    });
+
+    /* Valida las etiquedas del formulario */
+    $("#frm_trabajador").bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            "bean.nombres": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese Nombre por favor.'
+                    },
+                    regexp: {
+                        regexp: /^([A-Za-zñÑáéíóúüÜÁÉÍÓÚÿ\s]+)$/,
+                        message: 'Solo Caracteres alfabético.'
+                    }
+                }
+            },
+            "bean.ape_paterno": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese Apellido Paterno por favor.'
+                    },
+                    regexp: {
+                        regexp: /^([A-Za-zñÑáéíóúüÜÁÉÍÓÚÿ\s]+)$/,
+                        message: 'Solo Caracteres alfabético.'
+                    }
+                }
+            },
+            "bean.ape_materno": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese Apellido Materno por favor.'
+                    },
+                    regexp: {
+                        regexp: /^([A-Za-zñÑáéíóúüÜÁÉÍÓÚÿ\s]+)$/,
+                        message: 'Solo Caracteres alfabético.'
+                    }
+                }
+            },
+            "bean.dni": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese DNI por favor.'
+                    },
+                    stringLength: {
+                        min: 8,
+                        max: 8,
+                        message: 'Teléfono tiene 08 cifras máximo.'
+                    },
+                    integer: {
+                        message: 'Ingrese solo números.'
+                    }
+                }
+            },
+            "bean.direccion": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese Dirección por favor.'
+                    }
+                }
+            },
+            "bean.correo": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese Correo Electrónico por favor.'
+                    },
+                    emailAddress: {
+                        message: 'El Correo Electronico ingresado no es válida.'
+                    }
+                }
+            },
+            "bean.telefono": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese telefono por favor.'
+                    },
+                    stringLength: {
+                        min: 7,
+                        max: 7,
+                        message: 'Teléfono tiene 07 cifras máximo.'
+                    },
+                    integer: {
+                        message: 'Ingrese solo números.'
+                    }
+                }
+            },
+            "bean.fecha_nacimiento": {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingrese Fecha de Nacimiento por favor.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha de nacimiento no es valida'
+                    }
+                }
+            },
+        }
+    });
 });
 
-/*function ListarTrabajador(data) {
-    $('#rellenar').html('');
-    var trHTML = '';
-    if (data.length > 0) {
-        for (var i = 0; i < data.length; i++) {
-
-            trHTML += '<tr><td>'
-				+ data[i]['idTrabajador']
-				+ '</td><td>'
-				+ data[i]['nombres']
-				+ '</td><td>'
-				+ data[i]['dni']
-				+ '</td><td>'
-				+ data[i]['tb_usuario']['login']
-				+ '</td><td>'
-				+ data[i]['tb_usuario']['password']
-				+ '</td><td>'
-				+ data[i]['telefono']
-				+ '</td><td><a data-id="' + data[i]['idTrabajador'] + '" class="RecuperarPersonaAsociada btn btn-info"><span class="glyphicon glyphicon-edit"></span> </a></td>'
-				+ '</td><td><a  data-id="' + data[i]['idTrabajador'] + '" class="EliminarPersonaAsociada btn btn-danger"><span class="glyphicon glyphicon-trash" ></span></a></td></tr>';
-        }
-        $('#rellenar').append(trHTML);
-    }
-    $('#dataTables_example_length').css('display', 'none');
-    $('#dataTables_example_filter').css('display', 'none');
-}*/
 
 //Var para definir la pagination de la grilla desde la BD
 var paginador;
@@ -227,7 +316,7 @@ function cargaPagina(pagina) {
                         + '</td><td>'
                         + data[i]['telefono']
                         + '</td><td><a data-id="' + data[i]['idTrabajador'] + '" class="RecuperarTrabajador btn btn-info"><span class="glyphicon glyphicon-edit"></span> </a></td>'
-                        + '</td><td><a  data-id="' + data[i]['idTrabajador'] + '" class="EliminarPersonaAsociada btn btn-danger"><span class="glyphicon glyphicon-trash" ></span></a></td></tr>';
+                        + '</td><td><a  data-id="' + data[i]['idTrabajador'] + '" class="DarBajaTrabajador btn btn-danger"><span class="glyphicon glyphicon-trash" ></span></a></td></tr>';
                 }
                 $('#rellenar').append(trHTML);
             }
@@ -270,7 +359,7 @@ function cargaPagina(pagina) {
     paginador.children().eq(pagina + 2).addClass("active");
 }
 
-//Obtener Data PersonaAsociada para Modificar
+//Obtener Data Trabajador para Modificar
 
 $(document).on("click", ".RecuperarTrabajador", function (e) {
 
@@ -310,7 +399,6 @@ $(document).on("click", ".RecuperarTrabajador", function (e) {
 
     });
 });
-
 
 //function RegistrarTrabajador
 function RegistrarTrabajador() {

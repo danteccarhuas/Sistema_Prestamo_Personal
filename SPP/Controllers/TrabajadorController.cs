@@ -58,5 +58,13 @@ namespace SPP.Controllers
             Request.AcceptTypes.Contains("application/json");
             return Json(new { success = true, resultado = dao.BuscarTrabajador(idTrabajador) }, JsonRequestBehavior.AllowGet);
         }
+
+
+        public JsonResult DarBajaTrabajador(tb_trabajador bean)
+        {
+            BB_tb_trabajador dao = new BB_tb_trabajador();
+            Request.AcceptTypes.Contains("application/json");
+            return Json(new { success = true, resultado = dao.UpdateTrabajador(bean,3) }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

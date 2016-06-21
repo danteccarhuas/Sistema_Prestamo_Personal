@@ -35,8 +35,10 @@ namespace Lib_Data
                         cmd.Parameters.AddWithValue("@idUsuario", bean.tb_usuario.idUsuario);
                     }
                     else if (evaluar == 3)
+                    {
                         cmd.CommandText = "usp_DarBajaTrabajador";
-
+                        cmd.Parameters.AddWithValue("@idTrabajador", bean.idTrabajador);
+                    }
                     if (evaluar == 1 || evaluar == 2)
                     {
                         cmd.Parameters.AddWithValue("@nombres", bean.nombres);
