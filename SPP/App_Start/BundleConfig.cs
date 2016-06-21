@@ -39,7 +39,7 @@ namespace SPP
             bundles.Add(new StyleBundle("~/menu/css").Include(
                 "~/css/sb-admin.css",
                 "~/css/plugins/morris.css",
-                "~/font-awesome/css/font-awesome.min.css"));
+                "~/css/font-awesome/css/font-awesome.min.css"));
         }
     }
 }
