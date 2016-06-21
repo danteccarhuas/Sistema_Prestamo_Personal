@@ -80,7 +80,7 @@ namespace Lib_Data
             return salida;
         }
 
-        public tb_trabajador BuscarTrabajador(string idUsuario)
+        public tb_trabajador BuscarTrabajador(string idTrabajador)
         {
             tb_trabajador bean = null;
             SqlConnection con = new SqlConnection();
@@ -94,14 +94,19 @@ namespace Lib_Data
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "usp_BuscarTrabajador";
+
+                cmd.Parameters.AddWithValue("@idTrabajador", idTrabajador);
+
                 SqlDataReader dr = cmd.ExecuteReader();
                 try
                 {
 
                     if (dr.HasRows)
                     {
+                        tb_usuario usu = null;
                         while (dr.Read())
                         {
+                            usu = new tb_usuario();
                             bean = new tb_trabajador();
                             bean.idTrabajador = dr.GetString(0);
                             bean.nombres = dr.GetString(1);
@@ -111,8 +116,9 @@ namespace Lib_Data
                             bean.direccion = dr.GetString(5);
                             bean.correo = dr.GetString(6);
                             bean.telefono = dr.GetString(7);
-                            bean.fecha_nacimiento = dr.GetDateTime(8);
-                            bean.tb_usuario.idUsuario = dr.GetInt32(10);
+                            bean.fecha_nacimiento = Convert.ToDateTime(dr.GetDateTime(8)).ToString("yyyy-MM-dd");
+                            usu.idUsuario = dr.GetInt32(9);
+                            bean.tb_usuario = usu;
                         }
                     }
 

@@ -19,7 +19,7 @@
         $('#tab2').prop("disabled", true).addClass('disabled');
         $('.nav-tabs > .active').prop("disabled", true).addClass('disabled').prev('li').find('a').trigger('click');
         $("#mensajeAlerta").html("");
-        //$("#paginador").html("");/*Limpiar los numero de paginacion*/
+        $("#paginador").html("");/*Limpiar los numero de paginacion*/
 
         $("#btn_enviar").prop("disabled", false);
 
@@ -34,33 +34,17 @@
     });
 
     $('#btn_enviar').click(function (e) {
-        $.ajax({
-            type: "post",
-            url: $('#frm_trabajador').attr('action'),
-            data: {
-                'bean.nombres': $('#txt_nombre_guardar').val(), 'bean.ape_paterno': $('#txt_ape_paterno').val(),
-                'bean.ape_materno': $('#txt_ape_materno').val(), 'bean.dni': $('#txt_dni').val(), 'bean.direccion': $('#txt_direccion').val(),
-                'bean.correo': $('#txt_email').val(), 'bean.telefono': $('#txt_telefono').val(), 'bean.fecha_nacimiento': $('#txt_fecha_nacimiento').val(),
-            },
-            dataType: 'json',
-            success: function (resultado) {
-                //console.log(resultado.result);
-                //$('#txt_cod_tra_guardar').val(resultado.result);
-                //$('#ModalLoading').modal('hide');
-
-                if (resultado.result != "") {
-                    $('#tab2primary #frm_trabajador #txt_cod_tra_guardar').val(resultado.result);
-                    var mensaje = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"
-                    + "Se registraron los datos del Trabajador " + resultado.result + "</div>";
-                    $('#mensajeAlerta').html(mensaje);
-                }
-            },
-            error: function (xrh, ajaxOptions, thrownError) {
-                alert("Error status code: " + xrh.status);
-                alert("Error details: " + thrownError);
-            }
-        });
+        $('#hiddenInsert_UpdateTrabajador').val() == 0 ? RegistrarTrabajador() : ActualizarTrabajador();
+        /*deshabilitar button btn_enviar*/
+        $("#btn_enviar").prop("disabled", true);
         return false;
+    });
+
+    $('#btn_buscar').click(function (e) {
+        $("#paginador").html("");/*Limpiar los numero de paginacion*/
+        $('#ModalLoading').modal('show');
+        initGrilla();
+        $('#ModalLoading').modal('hide');
     });
 
 
@@ -138,7 +122,6 @@ function initGrilla() {
     var cod = $('#txt_codigo_buscar').val() == "" ? "" : $('#txt_codigo_buscar').val();
     var tra = $('#txt_nombre_apellido_buscar').val() == "" ? "" : $('#txt_nombre_apellido_buscar').val();
     var dni = $('#txt_dni_buscar').val() == "" ? "" : $('#txt_dni_buscar').val();
-    //url: '/Trabajador/TotalRegistrosTrabajador&&' + 'bean.idTrabajador=' + cod + '&&bean.nombres=' + tra + '&&bean.dni=' + dni,
     $.ajax({
         url: '/Trabajador/TotalRegistrosTrabajador',
         type: 'get',
@@ -243,7 +226,7 @@ function cargaPagina(pagina) {
                         + data[i]['tb_usuario']['password']
                         + '</td><td>'
                         + data[i]['telefono']
-                        + '</td><td><a data-id="' + data[i]['idTrabajador'] + '" class="RecuperarPersonaAsociada btn btn-info"><span class="glyphicon glyphicon-edit"></span> </a></td>'
+                        + '</td><td><a data-id="' + data[i]['idTrabajador'] + '" class="RecuperarTrabajador btn btn-info"><span class="glyphicon glyphicon-edit"></span> </a></td>'
                         + '</td><td><a  data-id="' + data[i]['idTrabajador'] + '" class="EliminarPersonaAsociada btn btn-danger"><span class="glyphicon glyphicon-trash" ></span></a></td></tr>';
                 }
                 $('#rellenar').append(trHTML);
@@ -285,4 +268,110 @@ function cargaPagina(pagina) {
     }
     paginador.children().removeClass("active");
     paginador.children().eq(pagina + 2).addClass("active");
+}
+
+//Obtener Data PersonaAsociada para Modificar
+
+$(document).on("click", ".RecuperarTrabajador", function (e) {
+
+    var codigo_trabajador = $(this).data('id');
+    $.ajax({
+        url: '/Trabajador/RecuperarTrabajador',
+        type: 'get',
+        data: { idTrabajador: codigo_trabajador },
+        dataType: 'json',
+        success: function (result) {
+
+            $('#tab1').prop("disabled", true).addClass('disabled');
+            $('#tab2').prop("disabled", false).removeClass('disabled');
+            $('#eventotab2primary').prop("disabled", false).removeClass('disabled');/*Quitamos el disabled del tab eventotab2primary*/
+            $('.nav-tabs > .active').prop("disabled", true).addClass('disabled').next('li').find('a').trigger('click');
+
+            $("#hiddenInsert_UpdateTrabajador").val(1);//Seteamos el flag a 1, significa que se modificara los datos de Trabajador
+            var data1 = result.resultado;
+
+            //hidden para recuperar luego para el actualizar PersonaAsociada
+            $('#frm_trabajador #txt_cod_tra_guardar').val(data1.idTrabajador);
+            $('#frm_trabajador #txt_hiddenidUsuario').val(data1.tb_usuario.idUsuario);
+            $("#frm_trabajador #txt_nombre_guardar").val(data1.nombres);
+            $("#frm_trabajador #txt_ape_paterno").val(data1.ape_paterno);
+            $("#frm_trabajador #txt_ape_materno").val(data1.ape_materno);
+            $("#frm_trabajador #txt_dni").val(data1.dni);
+            $("#frm_trabajador #txt_direccion").val(data1.direccion);
+            $("#frm_trabajador #txt_email").val(data1.correo);
+            $("#frm_trabajador #txt_telefono").val(data1.telefono);
+            $("#frm_trabajador #txt_fecha_nacimiento").val(data1.fecha_nacimiento);
+        }
+    });
+    e.preventDefault();
+    $("#myModal").modal({
+        keyboard: false,
+        backdrop: 'static'
+
+    });
+});
+
+
+//function RegistrarTrabajador
+function RegistrarTrabajador() {
+    $.ajax({
+        type: "post",
+        url: $('#frm_trabajador').attr('action'),
+        data: {
+            'bean.nombres': $('#txt_nombre_guardar').val(), 'bean.ape_paterno': $('#txt_ape_paterno').val(),
+            'bean.ape_materno': $('#txt_ape_materno').val(), 'bean.dni': $('#txt_dni').val(), 'bean.direccion': $('#txt_direccion').val(),
+            'bean.correo': $('#txt_email').val(), 'bean.telefono': $('#txt_telefono').val(), 'bean.fecha_nacimiento': $('#txt_fecha_nacimiento').val(),
+        },
+        dataType: 'json',
+        success: function (resultado) {
+            //console.log(resultado.result);
+            //$('#txt_cod_tra_guardar').val(resultado.result);
+            //$('#ModalLoading').modal('hide');
+
+            if (resultado.result != "") {
+                $('#tab2primary #frm_trabajador #txt_cod_tra_guardar').val(resultado.result);
+                var mensaje = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"
+                + "Se registraron los datos del Trabajador " + resultado.result + "</div>";
+                $('#mensajeAlerta').html(mensaje);
+            }
+        },
+        error: function (xrh, ajaxOptions, thrownError) {
+            alert("Error status code: " + xrh.status);
+            alert("Error details: " + thrownError);
+        }
+    });
+}
+
+
+/*Actualiza Trabajador*/
+function ActualizarTrabajador() {
+    $('#hiddenInsert_UpdateTrabajador').val(0);/*Setear hiddenInsert_UpdateTrabajador a 0 Significar que Registrara Trabajador*/
+    $('#ModalLoading').modal('show');
+    $.ajax({
+        type: "get",
+        url: '/Trabajador/ModificarTrabajador',
+        data: { 'bean.idTrabajador': $('#txt_cod_tra_guardar').val(),
+                'bean.tb_usuario.idUsuario': $('#txt_hiddenidUsuario').val(),
+                'bean.nombres': $('#txt_nombre_guardar').val(), 'bean.ape_paterno': $('#txt_ape_paterno').val(),
+                'bean.ape_materno': $('#txt_ape_materno').val(), 'bean.dni': $('#txt_dni').val(),
+                'bean.direccion': $('#txt_direccion').val(),
+                'bean.correo': $('#txt_email').val(), 'bean.telefono': $('#txt_telefono').val(),
+                'bean.fecha_nacimiento': $('#txt_fecha_nacimiento').val(),
+        },
+        contentType: false,
+        dataType: 'json',
+        success: function (result) {
+            $('#ModalLoading').modal('hide');
+
+            if (result.resultado != "" && result.resultado != -1) {
+                var mensaje = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"
+                + "Se actualizaron los datos del Trabajador</div>";
+                $('#mensajeAlerta').html(mensaje);
+            }
+        },
+        error: function (xrh, ajaxOptions, thrownError) {
+            alert("Error status code: " + xrh.status);
+            alert("Error details: " + thrownError);
+        }
+    });
 }

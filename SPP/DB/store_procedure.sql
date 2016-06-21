@@ -92,8 +92,8 @@ Begin
 
 select idTrabajador,nombres,ape_paterno,ape_materno,dni,direccion,correo,telefono,fecha_nacimiento,u.idUsuario
 from tb_trabajador t inner join tb_usuario u
-on t.idUsuario=u.idUsuario;
-
+on t.idUsuario=u.idUsuario
+where idTrabajador=@idTrabajador;
 End
 Go
 

@@ -14,10 +14,10 @@ namespace Lib_Negocio
             return dao.UpdateTrabajador(bean, evaluar);
         }
 
-        public tb_trabajador BuscarTrabajador(string idUsuario)
+        public tb_trabajador BuscarTrabajador(string idTrabajador)
         {
             DA_tb_trabajador dao = new DA_tb_trabajador();
-            return dao.BuscarTrabajador(idUsuario);
+            return dao.BuscarTrabajador(idTrabajador);
         }
         public List<tb_trabajador> ListarTrabajador(tb_trabajador bean)
         {

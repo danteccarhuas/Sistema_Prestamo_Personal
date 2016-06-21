@@ -20,9 +20,7 @@ namespace Lib_Entidad
 
         public string telefono { get; set; }
 
-        public DateTime fecha_nacimiento { get; set; }
-
-        public int idUsuario { get; set; }
+        public string fecha_nacimiento { get; set; }
 
         public tb_usuario tb_usuario { get; set; }
         public int estado { get; set; }

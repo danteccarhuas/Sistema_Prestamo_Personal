@@ -24,6 +24,13 @@ namespace SPP.Controllers
             return Json(new { result = dao.UpdateTrabajador(bean, 1) });
         }
 
+        public ActionResult ModificarTrabajador(tb_trabajador bean)
+        {
+            BB_tb_trabajador dao = new BB_tb_trabajador();
+            Request.AcceptTypes.Contains("application/json");
+            return Json(new { success = true, resultado = dao.UpdateTrabajador(bean, 2) }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public JsonResult ListaTrabajador(tb_trabajador bean)
         {
@@ -43,6 +50,13 @@ namespace SPP.Controllers
             bean.dni = bean.dni == null ? "" : bean.dni;
             Request.AcceptTypes.Contains("application/json");
             return Json(new { success = true, resultado = dao.TotalRegistroTrabajador(bean) }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult RecuperarTrabajador(String idTrabajador)
+        {
+            BB_tb_trabajador dao = new BB_tb_trabajador();
+            Request.AcceptTypes.Contains("application/json");
+            return Json(new { success = true, resultado = dao.BuscarTrabajador(idTrabajador) }, JsonRequestBehavior.AllowGet);
         }
     }
 }
