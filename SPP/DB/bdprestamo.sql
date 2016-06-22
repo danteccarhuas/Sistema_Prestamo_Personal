@@ -5,6 +5,7 @@ begin
 end
 go
 create database DBPRESTAMO;
+go
 use DBPRESTAMO;
 
 if OBJECT_ID('tb_usuario') is not null
@@ -87,7 +88,9 @@ end
 go
 create table tb_menu(
 idMenu int primary key identity(1,1) not null,
-descripcion_menu varchar(45) not null
+descripcion_menu varchar(45) not null,
+icon_left varchar(45) not null,
+icon_right varchar(45) not null
 );
 
 
@@ -99,6 +102,7 @@ go
 create table tb_submenu(
 idSub_Menu int primary key identity(1,1) not null,
 descripcion_sub_menu varchar(45) not null,
+url varchar(50) not null,
 idMenu int not null,
 constraint fk_menu_sub_menu foreign key(idMenu)references tb_menu
 );

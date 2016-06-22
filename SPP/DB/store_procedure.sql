@@ -26,6 +26,9 @@ insert tb_usuario values (@dni,@v_pass);
 
 select @v_idUsuario=MAX(idUsuario) from tb_usuario;
 
+insert tb_rol_tb_usuario values
+(2,@v_idUsuario);
+
 select @v_idTrabajador=RTRIM('TRA')+RTRIM(RIGHT('000' +CONVERT(varchar,ISNULL(MAX(CONVERT(int,right([idTrabajador],4))),0)+1),4)) from dbo.tb_trabajador; 
 
 INSERT tb_trabajador(idTrabajador,nombres,ape_paterno,ape_materno,dni,direccion,correo,telefono,fecha_nacimiento,estado,idUsuario)
@@ -266,3 +269,74 @@ Begin
 	set @TOTALREGISTRO=@v_TOTALREGISTRO;
 End
 Go
+
+if object_id('usp_Obtener_DatosLogueado')is not null
+begin
+	drop proc usp_Obtener_DatosLogueado
+end
+go
+create procedure usp_Obtener_DatosLogueado(
+@login VARCHAR(45), 
+@password VARCHAR(45)
+)
+as
+BEGIN
+
+	select	t.idTrabajador,
+			t.nombres+' '+t.ape_materno+' '+t.ape_materno as usuario,
+			u.idUsuario,
+			t.estado
+		from tb_trabajador t inner join tb_usuario u
+		on t.idUsuario =u.idUsuario
+		where u.login=@login and u.password=@password;
+
+END 
+go
+
+if object_id('usp_Obtener_Enlace')is not null
+begin
+	drop proc usp_Obtener_Enlace
+end
+go
+create procedure usp_Obtener_Enlace(
+@idUsuario int
+)
+as
+BEGIN
+
+	SELECT	m.idMenu,
+			m.descripcion_menu,
+			m.icon_left,
+			m.icon_right
+		from tb_usuario u inner join tb_rol_tb_usuario  ru
+		on u.idUsuario =ru.idUsuario inner join tb_permiso p
+		on ru.idRol= p.idRol inner join tb_submenu sm
+		on sm.idSub_Menu= p.idSub_Menu inner join tb_menu m
+		on m.idMenu=sm.idMenu
+		where u.idUsuario=@idUsuario
+		order by m.idMenu asc;	
+
+END
+go
+
+
+if object_id('usp_Obtener_SubEnlace')is not null
+begin
+	drop proc usp_Obtener_SubEnlace
+end
+go
+create procedure usp_Obtener_SubEnlace(
+@idMenu int
+)
+as
+BEGIN
+
+		SELECT	sm.idSub_Menu,
+				sm.descripcion_sub_menu,
+				sm.url
+			from tb_submenu sm inner join tb_menu m
+			on sm.idMenu=m.idMenu
+		where m.idMenu=@idMenu;
+
+END 
+go
