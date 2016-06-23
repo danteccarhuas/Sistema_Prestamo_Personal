@@ -6,10 +6,6 @@
     <title>.: Sistema Prestamo Personal</title>
     @Styles.Render("~/loguin/css")
     @Styles.Render("~/bootstrap/css")
-    @Scripts.Render("~/Jquery")
-    @Scripts.Render("~/bootstrap/js")
-    <!--<script src="~/Scripts/bootstrapValidator.js"></script>-->
-    <script type="text/javascript" src="~/js/function-seguridad.js"></script>
 </head>
 <body>
     <div class="container">
@@ -22,7 +18,7 @@
                 <div class="account-wall">
                     <img class="profile-img" src="~/images/loginUser.png" alt="img_user">
                     <form class="form-signin" accept-charset="UTF-8" role="form"
-                          method="POST" id="frmSeguridad">
+                          method="POST" id="frmSeguridad" action="/Seguridad/Intranet">
                         <div class="form-group">
                             <input type="text" class="form-control" name="txtuser_name" id="txtuser_name"
                                    placeholder="usuario" autofocus>
@@ -39,5 +35,9 @@
             </div>
         </div>
     </div>
+    @Scripts.Render("~/Jquery")
+    @Scripts.Render("~/bootstrap/js")
+    <!--<script src="~/Scripts/bootstrapValidator.js"></script>-->
+    <script type="text/javascript" src="~/js/function-seguridad.js"></script>
 </body>
 </html>

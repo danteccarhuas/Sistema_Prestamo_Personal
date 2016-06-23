@@ -33,6 +33,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BB_Seguridad.cs" />
     <Compile Include="BB_tb_cliente.cs" />
     <Compile Include="BB_tb_trabajador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
