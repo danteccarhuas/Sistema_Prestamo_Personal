@@ -1,5 +1,7 @@
 ﻿@{
     //ViewBag.Title = "MenuPrincipal";
+    var data = Session["Menu"] as List<Lib_Entidad.tb_menu>;
+    var trabajador = Session["Trabajador"] as Lib_Entidad.tb_trabajador;
 }
 
 <!DOCTYPE html>
@@ -24,29 +26,36 @@
     @Scripts.Render("~/datepicker/js")
     <!--Js para validation-->
     @Scripts.Render("~/bootstrapValidator/js")
+
+
 </head>
 <body>
     <div id="wrapper">
+
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">SB Admin</a>
+                <a class="navbar-brand text-capitalize" href="#">Bienvenido :@trabajador.nombres</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
 
+
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle text-capitalize"
+                       data-toggle="dropdown"><img src="~/images/loginUser.png" class="img-rounded img-circle center-block" alt="Cinque Terre" width="20" height="20">@trabajador.nombres</a>
                     <ul class="dropdown-menu">
+
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="/Seguridad/Logout">
+                                <i class="fa fa-fw fa-power-off"></i> Log
+                                Out
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -54,47 +63,37 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
-                    </li>
-                    <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-fw fa-edit"></i> Forms</a>
-                    </li>
-                    <li>
-                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
-                    </li>
-                    <li>
-                        <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-                    </li>
-
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo2"><i class="fa fa-fw fa-table"></i> Mantenimiento <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo2" class="collapse">
-                            <li>
-                                <!--<a href="/menu/">Dropdown Item</a>-->
-                                @Html.ActionLink("Mantenimiento Trabajador", "mantener_trabajador", "Trabajador")
-                            </li>
-                            <li>
-                                <!--<a href="#">Dropdown Item</a>-->
-                                @Html.ActionLink("Mantenimiento Cliente", "mantener_cliente", "Cliente")
-                            </li>
-                        </ul>
-                    </li>
+                   @for (int i = 0; i < data.Count; i++)
+                    { 
+                        <li>
+                            <a href="javascript:;" data-toggle="collapse"
+                               data-target="#@data[i].idMenu"><i class="@data[i].icon_left"></i>
+                                @data[i].descripcion_menu<i class="@data[i].icon_right"></i>
+                            </a>
+                            <!--   #session.objUsuarioMenus.listsub_enlace -->
+                            <ul id="@data[i].idMenu" class="collapse">
+                            @for (int e = 0; e < data[i].tb_submenu.Count; e++)
+                            { 
+                                <li>
+                                    <a href="@data[i].tb_submenu[e].url">@data[i].tb_submenu[e].descripcion_sub_menu</a>
+                                </li>
+                            }
+                </ul>
+                </li>
+                }   
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </nav>
         <div id="page-wrapper">
+
             @RenderBody()
+
         </div>
         <!-- /#page-wrapper -->
+
     </div>
     <!-- /#wrapper -->
+
 </body>
 </html>

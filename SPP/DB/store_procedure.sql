@@ -283,7 +283,7 @@ as
 BEGIN
 
 	select	t.idTrabajador,
-			t.nombres+' '+t.ape_materno+' '+t.ape_materno as usuario,
+			t.nombres+' '+t.ape_paterno+' '+t.ape_materno as usuario,
 			u.idUsuario,
 			t.estado
 		from tb_trabajador t inner join tb_usuario u
@@ -304,7 +304,7 @@ create procedure usp_Obtener_Enlace(
 as
 BEGIN
 
-	SELECT	m.idMenu,
+	SELECT	distinct(m.idMenu),
 			m.descripcion_menu,
 			m.icon_left,
 			m.icon_right

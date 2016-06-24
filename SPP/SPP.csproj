@@ -191,6 +191,7 @@
     <Content Include="css\font-awesome\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\bcp.png" />
     <Content Include="images\loginUser.png" />
     <Content Include="js\function-cliente.js" />
     <Content Include="js\function-seguridad.js" />
