@@ -89,7 +89,7 @@ namespace Lib_Data
                     }
                     for (int x = 0; x < list_menu.Count; x++)
                     {
-                        list_menu[x].tb_submenu = ObtenerSubEnlaces(list_menu[x].idMenu);
+                        list_menu[x].tb_submenu = ObtenerSubEnlaces(list_menu[x].idMenu, idUsuario);
                     }
                 }catch(Exception ex){
                     throw ex;
@@ -102,7 +102,7 @@ namespace Lib_Data
             return list_menu;
         }
 
-        public List<tb_submenu> ObtenerSubEnlaces(int idMenu)
+        public List<tb_submenu> ObtenerSubEnlaces(int idMenu, int idUsuario)
         {
             List<tb_submenu> list_submenu = new List<tb_submenu>();
             tb_submenu obj = null;
@@ -117,6 +117,7 @@ namespace Lib_Data
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "usp_Obtener_SubEnlace";
                 cmd.Parameters.AddWithValue("@idMenu", idMenu);
+                cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
 
                 SqlDataReader dr = cmd.ExecuteReader();
                 try

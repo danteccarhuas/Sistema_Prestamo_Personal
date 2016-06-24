@@ -326,7 +326,8 @@ begin
 end
 go
 create procedure usp_Obtener_SubEnlace(
-@idMenu int
+@idMenu int,
+@idUsuario int
 )
 as
 BEGIN
@@ -335,8 +336,11 @@ BEGIN
 				sm.descripcion_sub_menu,
 				sm.url
 			from tb_submenu sm inner join tb_menu m
-			on sm.idMenu=m.idMenu
-		where m.idMenu=@idMenu;
+			on sm.idMenu=m.idMenu inner join tb_permiso p
+			on sm.idSub_Menu=p.idSub_Menu inner join tb_rol_tb_usuario ru
+			on p.idRol=ru.idRol inner join tb_usuario u
+			on ru.idUsuario=u.idUsuario
+		where m.idMenu=@idMenu and u.idUsuario=@idUsuario;
 
 END 
 go

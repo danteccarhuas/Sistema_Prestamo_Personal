@@ -22,7 +22,6 @@ namespace SPP.Controllers
             tb_trabajador obj = dao.Loguear(bean);
             if(obj==null){
                 String error= "error";
-                //ViewBag.loguear = Session["loguear"] as String;
                 Session["loguear"] = error.ToString();
                 return RedirectToAction("Loguin");
             }
@@ -32,10 +31,6 @@ namespace SPP.Controllers
             ViewBag.Menu = Session["Menu"] as List<tb_menu>;
             ViewBag.Menu = Session["Trabajador"] as tb_trabajador;
             return View();
-
-            //ViewBag.DatosUsuario = Session["DatosUsuario"] as tb_trabajador;
-                //Session["Datos_Menu"] = obj;
-            //return Json(new { success = true, resultado = 1 });
         }
 
         public ActionResult Logout()
