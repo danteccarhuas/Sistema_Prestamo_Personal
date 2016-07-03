@@ -8,7 +8,7 @@
         $('.nav-tabs > .active').prop("disabled", true).addClass('disabled').next('li').find('a').trigger('click');
 
         /*habilitar button btn_enviar*/
-        $("#btn_enviar").prop("disabled", false);
+        $("#btn_enviar").prop("disabled", false); 
     });
 
     //Activar Panel ConsultarTrabajador y Desactivar PanelDatosTrajador
