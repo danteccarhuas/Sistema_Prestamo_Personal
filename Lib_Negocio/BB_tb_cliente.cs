@@ -9,19 +9,25 @@ namespace Lib_Negocio
     {
         public string UpdateCliente(tb_cliente bean, int evaluar)
         {
-            DA_Cliente dao = new DA_Cliente();
+            DA_tb_Cliente dao = new DA_tb_Cliente();
             return dao.UpdateCliente(bean, evaluar);
         }
 
         public tb_cliente BuscarCliente(string idCliente)
         {
-            DA_Cliente dao = new DA_Cliente();
+            DA_tb_Cliente dao = new DA_tb_Cliente();
             return dao.BuscarCliente(idCliente);
         }
-        public List<tb_cliente> ListarCliente()
+        public List<tb_cliente> ListarCliente(tb_cliente bean)
         {
-            DA_Cliente dao = new DA_Cliente();
-            return dao.ListarCliente();
+            DA_tb_Cliente dao = new DA_tb_Cliente();
+            return dao.ListarCliente(bean);
+        }
+
+        public int TotalRegistroCliente(tb_cliente bean)
+        {
+            DA_tb_Cliente dao = new DA_tb_Cliente();
+            return dao.TotalRegistroCliente(bean);
         }
     }
 }

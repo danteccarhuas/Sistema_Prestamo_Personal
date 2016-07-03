@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Lib_Data
 {
-    public class DA_Cliente
+    public class DA_tb_Cliente
     {
         public string UpdateCliente(tb_cliente bean, int evaluar)
         {
@@ -35,6 +35,7 @@ namespace Lib_Data
                     }
                     else if (evaluar == 3)
                         cmd.CommandText = "usp_DarBajaCliente";
+                    cmd.Parameters.AddWithValue("@idCliente", bean.idCliente);
 
                     if (evaluar == 1 || evaluar == 2)
                     {
@@ -80,6 +81,8 @@ namespace Lib_Data
             return salida;
         }
 
+
+
         public tb_cliente BuscarCliente(string idCliente)
         {
             tb_cliente bean = null;
@@ -94,6 +97,9 @@ namespace Lib_Data
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "usp_BuscarCliente";
+
+                cmd.Parameters.AddWithValue("@idCliente", idCliente);
+
                 SqlDataReader dr = cmd.ExecuteReader();
                 try
                 {
@@ -132,9 +138,11 @@ namespace Lib_Data
 
 
 
-        public List<tb_cliente> ListarCliente()
+
+
+        public List<tb_cliente> ListarCliente(tb_cliente bean)
         {
-            tb_cliente bean = null;
+            tb_cliente obj = null;
             List<tb_cliente> data = new List<tb_cliente>();
             SqlConnection con = new SqlConnection();
             Conexion cn = new Conexion();
@@ -147,6 +155,12 @@ namespace Lib_Data
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "usp_ListarCliente";
+
+                cmd.Parameters.AddWithValue("@idCliente", bean.idCliente);
+                cmd.Parameters.AddWithValue("@nombres", bean.nombres);
+                cmd.Parameters.AddWithValue("@dni", bean.dni);
+                cmd.Parameters.AddWithValue("@correo", bean.correo);
+                cmd.Parameters.AddWithValue("@telefono", bean.telefono);
                 SqlDataReader dr = cmd.ExecuteReader();
                 try
                 {
@@ -157,12 +171,12 @@ namespace Lib_Data
                         while (dr.Read())
                         {
 
-                            bean = new tb_cliente();
-                            bean.idCliente = dr.GetString(0);
-                            bean.nombres = dr.GetString(1);
-                            bean.dni = dr.GetString(2);
-                            bean.correo = dr.GetString(3);
-                            bean.telefono = dr.GetString(4);
+                            obj = new tb_cliente();
+                            obj.idCliente = dr.GetString(0);
+                            obj.nombres = dr.GetString(1);
+                            obj.dni = dr.GetString(2);
+                            obj.correo = dr.GetString(3);
+                            obj.telefono = dr.GetString(4);
 
                             data.Add(bean);
                         }
@@ -180,5 +194,44 @@ namespace Lib_Data
             }
             return data;
         }
+
+        public int TotalRegistroCliente(tb_cliente bean)
+        {
+            int TotalRegistro = 0;
+            SqlConnection con = new SqlConnection();
+            Conexion cn = new Conexion();
+            con = cn.getConexion();
+            con.Open();
+
+            if (con != null)
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "usp_TotaRegist_Cliente";
+
+                cmd.Parameters.AddWithValue("@idCliente", bean.idCliente);
+                cmd.Parameters.AddWithValue("@nombre", bean.nombres);
+                cmd.Parameters.AddWithValue("@dni", bean.dni);
+                cmd.Parameters.Add(new SqlParameter("@TOTALREGISTRO", SqlDbType.Int)).Direction = ParameterDirection.Output;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    TotalRegistro = int.Parse(cmd.Parameters[3].Value.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+            return TotalRegistro;
+        }
     }
+
+
+
 }
